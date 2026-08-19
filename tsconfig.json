@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    // DOM added for src/shell/ (the tab-strip/toolbar chrome UI, a real
+    // browser renderer) — main-process files also see these globals now as
+    // a side effect of one shared tsconfig, which is harmless (it only adds
+    // types, doesn't remove Node ones) and simpler than maintaining two
+    // separate tsconfigs for what's still a small app.
+    "lib": ["ES2022", "DOM"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+    // NOTE: using plain relative imports for now, not path aliases — tsc
+    // alone (no bundler yet) doesn't rewrite "@shared/*" style aliases at
+    // compile time, so they'd resolve in the editor but crash at runtime.
+    // Revisit once a bundler (electron-vite, etc.) is chosen in the shell
+    // phase; that's the point aliases become safe to reintroduce.
+  },
+  "include": ["src"]
+}

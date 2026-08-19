@@ -1,0 +1,32 @@
+{
+  "name": "desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Native Windows desktop shell for the ProjectRD platform app (loads the live web app, adds native printing + OS-level features).",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "build:main": "tsc -p tsconfig.json",
+    "build:preload": "esbuild src/preload/index.ts --bundle --platform=node --format=cjs --external:electron --outfile=dist/preload/index.js && esbuild src/preload/shell.ts --bundle --platform=node --format=cjs --external:electron --outfile=dist/preload/shell.js",
+    "build:shell": "esbuild src/shell/index.ts src/shell/popup.ts --bundle --outdir=dist/shell && node -e \"const fs=require('fs');fs.mkdirSync('dist/shell',{recursive:true});for(const f of ['index.html','index.css','popup.html','popup.css','logo.png'])fs.copyFileSync('src/shell/'+f,'dist/shell/'+f)\"",
+    "build": "pnpm build:main && pnpm build:preload && pnpm build:shell",
+    "start": "electron .",
+    "dev": "pnpm build && electron .",
+    "dist": "pnpm build && electron-builder --win",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "pdf-to-printer": "^5.6.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,169 @@
+/* Popup menu surface — redesigned to match Chrome's own toolbar popups
+   (address-bar suggestions, account menu): a centered account card up top,
+   icon-led rows, roomier spacing, and real layered elevation instead of one
+   flat shadow. The WINDOW itself is transparent; the card drawn here is
+   what makes it read as a floating menu rather than a rectangular window. */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: transparent;
+  font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 13px;
+  color: #202124;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+}
+
+#card {
+  height: 100%;
+  /* Inset leaves room for the shadow to render inside the window bounds. */
+  margin: 6px;
+  background: #ffffff;
+  border-radius: 14px;
+  /* Layered elevation (ambient + key light), not one flat shadow — this is
+     what makes Chrome's own popups read as "floating" rather than flat. */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.10),
+    0 12px 28px rgba(0, 0, 0, 0.16);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+button:hover { background: #f1f3f4; }
+button.danger { color: #c5221f; }
+
+.row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  color: #5f6368;
+}
+button.danger .row-icon { color: #c5221f; }
+
+.menu-body { padding: 6px; }
+
+/* ── Profile account card (Chrome-style: centered avatar + name + email
+   in a softly tinted panel, not a small left-aligned row) ── */
+.profile-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 22px 20px 18px;
+  background: linear-gradient(180deg, #eef4ff 0%, #ffffff 100%);
+}
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #1a73e8;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.35);
+}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-name {
+  font-weight: 600;
+  font-size: 14.5px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-email {
+  font-size: 12px;
+  color: #5f6368;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.section-label {
+  padding: 8px 14px 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #5f6368;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+#theme-row { display: flex; gap: 4px; padding: 2px 8px 6px; }
+#theme-row button {
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  padding: 9px 4px;
+  font-size: 10.5px;
+}
+#theme-row button.active { background: #e8f0fe; color: #1a73e8; }
+#theme-row button .row-icon { width: auto; }
+
+.divider { height: 1px; background: #e6e8eb; margin: 6px 8px; }
+
+/* ── History menu ── */
+#history-list { overflow-y: auto; flex: 1; padding: 6px; }
+.history-item { align-items: center; }
+.history-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.history-title {
+  font-size: 12.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.history-meta { font-size: 11px; color: #5f6368; }
+.empty { padding: 22px 14px; text-align: center; color: #5f6368; font-size: 12.5px; }
+
+/* ── Address-bar suggestions ── */
+#suggestion-list { overflow-y: auto; flex: 1; padding: 6px; }
+.suggestion-item {
+  justify-content: space-between;
+  gap: 12px;
+}
+.suggestion-title {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.suggestion-path {
+  font-size: 11.5px;
+  color: #5f6368;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+/* .active = keyboard-highlighted (pushed from the shell's arrow-key
+   handling, since this window never has keyboard focus itself). */
+.suggestion-item.active { background: #f1f3f4; }

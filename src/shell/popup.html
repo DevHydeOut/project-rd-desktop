@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' https: data:" />
+  <title>Menu</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- Rendered inside a frameless, transparent, always-on-top window (see
+       main/popup.ts) rather than as DOM in the shell page, because the
+       shell page is covered by the active tab's native WebContentsView
+       below the chrome strip. #card is the visible menu surface. -->
+  <div id="card"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
